@@ -3,14 +3,14 @@ const express = require('express')
 
 let cors = require('cors');
 
-const itemRouter = require('../routes/reservas')
+const itemRouter = require('../controller/controller')
 
 const app = express()
-app.use(express.json)
+app.use(express.json())
 
 app.use('/reservas',itemRouter)
 
-app.use('/', function () {
+app.use('/', function (req, res) {
     res.send('Api de pruebas')
 })
 

@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router();
+const data = require('../models/data')
 
 router.get('/', function (req,res) {
     res.status(200).json(data)
@@ -72,4 +73,4 @@ router.put('/:id', function (req, res) {
     }
 });
 
-module.exports = controller;
+module.exports = router;
