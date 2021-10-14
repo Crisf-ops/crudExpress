@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router();
 const data = require('../models/data')
+const dataUser = require('../models/dataUser')
 
 router.get('/', function (req,res) {
     res.status(200).json(data)
@@ -18,19 +19,22 @@ router.get('/:id',function (req,res) {
 })
 //Crear
 router.post('/',function (req,res) {
-    let itemIds = data.map(item => item.id)
-    let newId = itemIds.length > 0 ? Math.max.apply(Math, itemIds) +1 : 1
+    let  itemIds= data.map (item => item.id);
 
-    let newItem = {
-        id : newId,
-        nombre: req.body.nombre,
-        pais: req.body.pais,
-        telefono: req.body.telefono,
-        active: req.body.active,
-        createdON: new Date()
-    }
-    data.push(newItem);
-    res.status(201).json(newItem);
+    let newId = itemIds.length > 0 ? Math.max.apply(Math, itemIds) +1 : 1;
+
+// let newItem = {
+//     id: newId,
+//     nombre: req.body.nombre,
+//     pais: req.body.pais,
+//     telefono: req.body.Telefono,
+//     active: req.body.active,
+//     createdOn: new Date()
+//     }   
+    let newUser = new dataUser(newId,req.body.nombre,req.body.pais,req.body.telefono,req.body.active,new Date())
+
+    data.push(newUser);
+    res.status(201).json(newUser);
 })
 //Eliminar
 router.delete('/id',function (req,res) {
@@ -54,19 +58,18 @@ router.put('/:id', function (req, res) {
 
     if (found) {
         let updated = {
-            // el found.id sera siempre el id del que se consulto
             id: found.id, 
-            //typeof = tipo de dato ejemplos si String, booleano o int
-            // Si la condicion es verdadera actualizara el body del json si no quedara tal cual como esta
-            Nombre: typeof(req.body.Nombre) != "undefined" ? req.body.name: found.Nombre,
-            Pais: typeof(req.body.Pais) != "undefined" ? req.body.country: found.Pais,
-            Telefono: typeof(req.body.Telefono) != "undefined" ? req.body.phone: found.Telefono,
-            Active: typeof(req.body.Active) != "undefined" ? req.body.active: found.Active,
+            nombre: typeof(req.body.nombre) != "undefined" ? req.body.nombre: found.nombre,
+            pais: typeof(req.body.pais) != "undefined" ? req.body.pais: found.pais,
+            telefono: typeof(req.body.Telefono) != "undefined" ? req.body.telefono: found.telefono,
+            active: typeof(req.body.active) != "undefined" ? req.body.active: found.active,
             createdOn: found.createdOn
         };
+
         let targetIndex = data.indexOf(found);
-        //splice se utiliza para actualizar y para eliminar
+
         data.splice(targetIndex, 1, updated);
+
         res.sendStatus(200);
     } else {
         res.sendStatus(404);
